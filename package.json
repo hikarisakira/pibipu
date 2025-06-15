@@ -1,0 +1,24 @@
+{
+  "name": "pibipu-new",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "bun run index.ts",
+    "dev": "bun --watch index.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "bun-types": "^1.2.15",
+    "gts": "^6.0.2"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "commandkit": "^0.1.10",
+    "discord.js": "^14.19.3",
+    "mongoose": "^8.15.1",
+    "rss-parser": "^3.13.0"
+  }
+}

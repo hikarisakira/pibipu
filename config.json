@@ -1,0 +1,9 @@
+{
+  "clientId": "1360648812498129225",
+  "guildId": "1359868279933632544",
+  "checkInterval": 60000,
+  "maxCacheSize": 1000,
+  "defaultMessage": "🎥 **{{channel_name}}** 發布了新影片！\n\n**{{video_title}}**\n{{video_url}}",
+  "embedColor": "#FF0000",
+  "timeZone": "Asia/Taipei"
+}
