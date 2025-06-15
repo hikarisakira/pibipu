@@ -1,8 +1,6 @@
 FROM oven/bun:slim
 
-COPY package.json ./
-COPY bun.lockb ./
-COPY src ./
+COPY ./ ./
 
 RUN bun i
 CMD [ "bun", "index.ts" ]
