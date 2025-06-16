@@ -1,4 +1,4 @@
-import { Client, GatewayIntentBits } from "discord.js";
+import { Client, GatewayIntentBits, ActivityType } from "discord.js";
 import { CommandKit } from "commandkit";
 import mongoose from "mongoose";
 import path from "path";
@@ -66,6 +66,9 @@ async function connectDB() {
 //機器人上線後事件
 client.once("ready", async () => {
   console.log(`Logged in as ${client.user?.tag}`);
+  client.user?.setActivity("阿苗", {
+    type: ActivityType.Watching,
+  });
   await connectDB();
 });
 
