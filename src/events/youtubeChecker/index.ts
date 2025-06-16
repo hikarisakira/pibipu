@@ -1,7 +1,7 @@
 import { Client, TextChannel, EmbedBuilder } from "discord.js";
-import notificationConfig from "../../models/notificationConfig";
+import notificationConfig from "../../models/notificationConfig.js"; // DONT ASK ME WHY THIS IS A JAVASCRIPT FILE, nodenext.
 import RSSParser from "rss-parser";
-import config from "../../config.json";
+import config from "../../../config.json" with { type: "json" };
 
 const parser = new RSSParser();
 

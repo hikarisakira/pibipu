@@ -5,7 +5,7 @@ import {
   ChatInputCommandInteraction,
   Client,
 } from "discord.js";
-import notificationConfig from "../../models/notificationConfig";
+import notificationConfig from "../../models/notificationConfig.js"; // DONT ASK ME WHY THIS　IS A JAVASCRIPT FILE, nodenext.
 import RSSParser from "rss-parser";
 
 const parser = new RSSParser();
@@ -100,7 +100,7 @@ export const run = async ({
 // 處理設定命令
 async function handleSetup(
   interaction: ChatInputCommandInteraction,
-  client: Client,
+  _client: Client,
 ) {
   await interaction.deferReply();
 
@@ -135,6 +135,7 @@ async function handleSetup(
       if (!channelName) {
         throw new Error("Channel not found");
       }
+// oxlint-disable-next-line no-unused-vars
     } catch (error) {
       return await interaction.editReply({
         content: "❌ 找不到指定的 YouTube 頻道！請確認頻道 ID 是否正確。",
@@ -218,7 +219,7 @@ async function handleSetup(
 // 處理移除命令
 async function handleRemove(
   interaction: ChatInputCommandInteraction,
-  client: Client,
+  _client: Client,
 ) {
   await interaction.deferReply();
 
@@ -280,7 +281,7 @@ async function handleRemove(
 // 處理列表命令
 async function handleList(
   interaction: ChatInputCommandInteraction,
-  client: Client,
+  _client: Client,
 ) {
   await interaction.deferReply();
 
