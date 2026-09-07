@@ -14,4 +14,4 @@ FROM docker.io/library/debian:bookworm-slim
 WORKDIR /app
 COPY --from=build /app/target/release/pibipu /usr/local/bin/pibipu
 COPY config.json ./
-CMD ["sh","pibipu"]
+CMD ["/usr/local/bin/pibipu"]
