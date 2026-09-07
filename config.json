@@ -1,9 +1,29 @@
 {
-  "clientId": "1360648812498129225",
-  "guildId": "1359868279933632544",
-  "checkInterval": 60000,
-  "maxCacheSize": 1000,
-  "defaultMessage": "🎥 **{{channel_name}}** 發布了新影片！\n\n**{{video_title}}**\n{{video_url}}",
-  "embedColor": "#FF0000",
-  "timeZone": "Asia/Taipei"
+  "guild_id": "1359868279933632544",
+  "threads_interval_secs": 300,
+  "youtube_interval_secs": 60,
+  "targets": [
+    {
+      "channel_id": "1360121904526135394",
+      "youtube": ["UCICZqWqYDD4zfwQ9_7Kw-2g"],
+      "prefix": {
+        "threads": "",
+        "video": "",
+        "scheduled": "",
+        "live": "",
+        "end": ""
+      }
+    },
+    {
+      "channel_id": "1360132852959936594",
+      "threads": ["miaopoyatw"],
+      "youtube": ["UC_HqHm72u8efzD_kij0P8PQ"],
+      "prefix": {
+        "video": "",
+        "scheduled": "",
+        "live": "",
+        "end": ""
+      }
+    }
+  ]
 }
