@@ -5,12 +5,13 @@
   "targets": [
     {
       "channel_id": "1360121904526135394",
+      "threads": ["sdparty.tw"],
       "youtube": ["UCICZqWqYDD4zfwQ9_7Kw-2g"],
       "prefix": {
-        "threads": "",
-        "video": "",
-        "scheduled": "",
-        "live": "",
+        "threads": "<:arisu_dance:1362100880899575838><:SDP:1360054369101283388>黨部新訊來了，了解詳情：",
+        "video": "<:arisu_dance:1362100880899575838><:SDP:1360054369101283388>社會民主黨，上片！",
+        "scheduled": "<:arisu_dance:1362100880899575838><:SDP:1360054369101283388>黨部排定了直播：",
+        "live": "<:arisu_dance:1362100880899575838><:SDP:1360054369101283388>黨部節目直播開始！",
         "end": ""
       }
     },
@@ -19,10 +20,11 @@
       "threads": ["miaopoyatw"],
       "youtube": ["UC_HqHm72u8efzD_kij0P8PQ"],
       "prefix": {
-        "video": "",
-        "scheduled": "",
-        "live": "",
-        "end": ""
+        "threads": "<:arisu_dance:1362100880899575838><:miao:1361204381843722240>阿苗有新消息囉！",
+        "video": "<:arisu_dance:1362100880899575838><:miao:1361204381843722240>阿苗上傳了新的影片，快去康康",
+        "scheduled": "<:arisu_dance:1362100880899575838><:miao:1361204381843722240>阿苗排定了直播：",
+        "live": "<:arisu_dance:1362100880899575838><:miao:1361204381843722240>阿苗直播開始！",
+        "end": "直播已結束"
       }
     }
   ]

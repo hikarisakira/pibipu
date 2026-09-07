@@ -1,0 +1,19 @@
+{
+  "guild_id": "伺服器ID",
+  "threads_interval_secs": 300, // Threads check interval in seconds
+  "youtube_interval_secs": 60, // YouTube check interval in seconds
+  "targets": [
+    {
+      "channel_id": "1360121904526135394", // Discord channel ID to send messages to
+      "threads": [""],  // List of Threads usernames to monitor
+      "youtube": [""],  // List of YouTube channel IDs to monitor
+      "prefix": {
+        "threads": "", // Prefix for Threads messages
+        "video": "", // Prefix for YouTube video messages
+        "scheduled": "", // Prefix for YouTube scheduled video messages
+        "live": "", // Prefix for YouTube live video messages
+        "end": "" // Prefix for YouTube video end messages
+      }
+    }
+  ]
+}

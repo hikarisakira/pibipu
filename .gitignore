@@ -10,3 +10,5 @@ state.json.tmp
 .idea
 .vscode
 .DS_Store
+// config.json
+config.json
