@@ -1,23 +1,20 @@
-# fly.toml app configuration file generated for pibipu on 2025-06-16T09:09:29Z
-#
-# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
-#
+# fly.toml for pibipu. No [http_service]: a Discord bot serves no HTTP, and an http_service
+# with auto_stop_machines would let Fly Proxy stop the Machine for lack of traffic.
+# https://fly.io/docs/reference/configuration/
 
 app = 'pibipu'
 primary_region = 'arn'
 
 [build]
 
-[http_service]
-  internal_port = 3000
-  force_https = true
-  auto_stop_machines = 'stop'
-  auto_start_machines = true
-  min_machines_running = 0
-  processes = ['app']
+[mounts]
+  source = 'pibipu_data'   # fly volumes create pibipu_data --region arn --size 1
+  destination = '/data'    # state.json lives here
+
+[[restart]]
+  policy = 'always'
 
 [[vm]]
-  memory = '1gb'
+  memory = '256mb'
   cpu_kind = 'shared'
   cpus = 1
-  memory_mb = 512
