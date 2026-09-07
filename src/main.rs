@@ -35,7 +35,7 @@ async fn main() -> Result<()> {
     let google_key = std::env::var("GOOGLE_API_KEY")?;
 
     let client = serenity::Client::builder(&token, GatewayIntents::empty())
-        .activity(ActivityData::watching("阿苗"))
+        .activity(ActivityData::watching("正在看 阿苗"))
         .await?;
     let bot = Bot {
         discord: Discord {
