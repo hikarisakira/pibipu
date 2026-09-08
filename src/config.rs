@@ -13,7 +13,7 @@ pub struct Config {
     pub targets: Vec<Target>,
 }
 
-/// One Discord channel and the sources it subscribes to.
+/// A group of sources sent to one Discord channel with a shared prefix configuration.
 #[derive(Debug, Deserialize)]
 pub struct Target {
     #[serde(deserialize_with = "id")]
@@ -49,11 +49,9 @@ impl Config {
         if self.threads_interval_secs == 0 || self.youtube_interval_secs == 0 {
             return Err("poll intervals must be greater than zero".into());
         }
-        let mut channels = BTreeSet::new();
+        let mut threads_subscriptions = BTreeSet::new();
+        let mut youtube_subscriptions = BTreeSet::new();
         for target in &mut self.targets {
-            if !channels.insert(target.channel_id) {
-                return Err("combine sources for the same channel_id into one target".into());
-            }
             for user in &mut target.threads {
                 *user = user.trim().trim_start_matches('@').to_ascii_lowercase();
                 if user.is_empty()
@@ -62,6 +60,13 @@ impl Config {
                         .all(|b| b.is_ascii_alphanumeric() || b == b'_' || b == b'.')
                 {
                     return Err("Threads sources must be usernames, not URLs".into());
+                }
+                if !threads_subscriptions.insert((target.channel_id, user.clone())) {
+                    return Err(format!(
+                        "duplicate Threads source @{user} for channel_id {}",
+                        target.channel_id
+                    )
+                    .into());
                 }
             }
             for channel in &target.youtube {
@@ -72,6 +77,13 @@ impl Config {
                         .all(|b| b.is_ascii_alphanumeric() || b == b'_' || b == b'-')
                 {
                     return Err("YouTube sources must be 24-character UC channel IDs".into());
+                }
+                if !youtube_subscriptions.insert((target.channel_id, channel.clone())) {
+                    return Err(format!(
+                        "duplicate YouTube source {channel} for channel_id {}",
+                        target.channel_id
+                    )
+                    .into());
                 }
             }
         }
@@ -165,6 +177,91 @@ mod tests {
         assert_eq!(c.threads_users().into_iter().collect::<Vec<_>>(), ["a"]);
         assert_eq!(c.targets_for_youtube("UC1").count(), 1);
         assert_eq!(c.targets_for_youtube("UC9").count(), 0);
+    }
+
+    #[test]
+    fn same_channel_can_subscribe_to_distinct_sources_with_their_own_prefixes() {
+        let mut c: Config = serde_json::from_value(serde_json::json!({
+            "guild_id":"1", "threads_interval_secs":300, "youtube_interval_secs":60,
+            "targets":[
+                {"channel_id":"10", "threads":[" @MiaopoyaTW "],
+                 "youtube":["UC_HqHm72u8efzD_kij0P8PQ"], "prefix":"阿苗"},
+                {"channel_id":10, "threads":["fz.hikari.lee"],
+                 "youtube":["UCICZqWqYDD4zfwQ9_7Kw-2g"],
+                 "prefix":{"threads":"小光", "video":"新影片"}}
+            ]
+        }))
+        .unwrap();
+        c.validate().unwrap();
+
+        assert_eq!(
+            c.threads_users().into_iter().collect::<Vec<_>>(),
+            ["fz.hikari.lee", "miaopoyatw"]
+        );
+        for (user, prefix) in [("miaopoyatw", "阿苗 "), ("fz.hikari.lee", "小光 ")] {
+            let destinations: Vec<_> = c
+                .targets_for_threads(user)
+                .map(|t| (t.channel_id, t.prefix("threads")))
+                .collect();
+            assert_eq!(destinations, [(10, prefix.to_owned())]);
+        }
+        for (source, prefix) in [
+            ("UC_HqHm72u8efzD_kij0P8PQ", "阿苗 "),
+            ("UCICZqWqYDD4zfwQ9_7Kw-2g", "新影片 "),
+        ] {
+            let destinations: Vec<_> = c
+                .targets_for_youtube(source)
+                .map(|t| (t.channel_id, t.prefix("video")))
+                .collect();
+            assert_eq!(destinations, [(10, prefix.to_owned())]);
+        }
+    }
+
+    #[test]
+    fn duplicate_subscriptions_are_rejected_per_platform_and_destination() {
+        for (platform, source, duplicate) in [
+            ("threads", " @MiaopoyaTW ", "miaopoyatw"),
+            (
+                "youtube",
+                "UCICZqWqYDD4zfwQ9_7Kw-2g",
+                "UCICZqWqYDD4zfwQ9_7Kw-2g",
+            ),
+        ] {
+            let mut value = serde_json::json!({
+                "guild_id":"1", "threads_interval_secs":300, "youtube_interval_secs":60,
+                "targets":[
+                    {"channel_id":"10", platform:[source], "prefix":"first"},
+                    {"channel_id":10, platform:[duplicate], "prefix":"second"}
+                ]
+            });
+            let mut c: Config = serde_json::from_value(value.clone()).unwrap();
+            assert!(c.validate().is_err(), "duplicate {platform} subscription");
+
+            // The same source may still notify two different Discord channels.
+            value["targets"][1]["channel_id"] = 20.into();
+            let mut c: Config = serde_json::from_value(value.clone()).unwrap();
+            c.validate().unwrap();
+            let destinations: Vec<_> = if platform == "threads" {
+                assert_eq!(c.threads_users().len(), 1);
+                c.targets_for_threads(duplicate)
+                    .map(|t| t.channel_id)
+                    .collect()
+            } else {
+                assert_eq!(c.youtube_channels().len(), 1);
+                c.targets_for_youtube(duplicate)
+                    .map(|t| t.channel_id)
+                    .collect()
+            };
+            assert_eq!(destinations, [10, 20]);
+
+            value["targets"].as_array_mut().unwrap().pop();
+            value["targets"][0][platform] = serde_json::json!([source, duplicate]);
+            let mut c: Config = serde_json::from_value(value).unwrap();
+            assert!(
+                c.validate().is_err(),
+                "duplicate {platform} within one target"
+            );
+        }
     }
 
     #[test]

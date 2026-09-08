@@ -19,8 +19,8 @@
 
 | Discord 頻道 | YouTube 頻道 | Threads |
 | --- | --- | --- |
-| `1360121904526135394` | `UCICZqWqYDD4zfwQ9_7Kw-2g` | — |
-| `1360132852959936594` | `UC_HqHm72u8efzD_kij0P8PQ` | `miaopoyatw` |
+| `1360121904526135394` | `UCICZqWqYDD4zfwQ9_7Kw-2g` | `sdparty.tw` |
+| `1360132852959936594` | `UC_HqHm72u8efzD_kij0P8PQ` | `miaopoyatw`、`fz.hikari.lee`（各自使用不同前綴） |
 
 ```json
 {
@@ -39,13 +39,22 @@
         "live": "<@&角色ID> 開播了",
         "end": ""
       }
+    },
+    {
+      "channel_id": "頻道ID",
+      "threads": ["fz.hikari.lee"],
+      "prefix": {
+        "threads": "🐰早安，您的復中里里長小光已上線："
+      }
     }
   ]
 }
 ```
 
-- 一個 target 就是一個 Discord 頻道；同一來源可以出現在多個 target。
-- 同一個 Discord 頻道的來源放在同一個 target；ID 不得為 0，輪詢間隔必須大於 0。Threads 可填 `@username`，YouTube 需填 24 字元的 `UC` 頻道 ID。
+- 每個 target 指定一個 Discord 頻道、一組來源與通知前綴。同一個 `channel_id` 可以出現在多個 target，讓不同來源使用不同前綴（如上例）。
+- 如果多個來源共用前綴，也可放在同一個 target，例如 `"threads": ["miaopoyatw", "fz.hikari.lee"]`。
+- 同一來源可以通知不同 Discord 頻道；同一平台的同一來源不得在同一個 Discord 頻道重複訂閱（包含同一 target 內重複填寫）。Threads 帳號會先去除前後空白、開頭的 `@` 並轉成小寫，再檢查重複。
+- ID 不得為 0，輪詢間隔必須大於 0。Threads 可填 `@username`，YouTube 需填 24 字元的 `UC` 頻道 ID。
 - `prefix` 可以是一個字串（所有訊息都加）或依訊息種類的物件，缺的種類就不加。
 - 訊息長相：上架／開播＝prefix + 影片網址；預定＝`📅 直播預定 <t:…:F>（<t:…:R>）` + 影片網址 + 活動連結；結束＝`📺 直播結束 ｜ 🕑 時長 ｜ 👀 觀看 ｜ ❤️ 按讚` + 網址。
 
